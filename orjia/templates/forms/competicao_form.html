@@ -1,0 +1,22 @@
+<div class="row">
+    {% if messages %}
+    <div class="row align-items-center">
+        <div class="col">
+            {% include 'components/messages.html' %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% csrf_token %}
+    {% include 'components/form_messages.html' with form=form %}
+    <div class="row">
+        <div class="col-12 mb-3">
+            {% include 'components/field.html' with label='Modalidade:' field=form.modalidade %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 mb-3">
+            {% include 'components/field.html' with label='Naipe da competição:' field=form.sex %}
+        </div>
+    </div>
+</div>

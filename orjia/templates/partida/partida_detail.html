@@ -1,0 +1,85 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}Detalhes da competição{% endblock title %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="card-title text-dark"> Competição {{partida.competicao.modalidade}} - {{partida.competicao.get_sex_display}}</h2>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-dark"> Partida - {{ partida.numero }} | {{partida.get_etapa_display}}
+                    {% if user.is_authenticated and user.is_staff %}
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h2 class="text-center"></h2>
+                        <span class="pull-right">
+                                <a href="{% url 'partida:gerenciar_resultados' partida.pk %}">
+                                <button type="button" class="btn btn-primary btn-round">
+                                    <span class="fa fa-plus"></span> Gerenciar resultado
+                                </button>
+                                </a>
+                            </span>
+                    </div>
+                    {% endif %}
+                </h4>
+                <div class="row mb-2 mt-2">
+                    <div class="col-8">
+                        {% include 'components/read_only_field.html' with value=partida.local label='Local' %}
+                    </div>
+                    <div class="col-4 col-md-2">
+                        {% include 'components/read_only_field.html' with value=partida.data label='Data' %}
+                    </div>
+                </div>
+                <div class="row mb-2 mt-2">
+                    <div class="col-5 col-md-3">
+                        {% include 'components/read_only_field.html' with value=competidor.0.equipe.atletica.nome label='Equipe A' %}
+                    </div>
+                    <!--                            <h2>X</h2>-->
+                    <div class="col-5 col-md-3">
+                        {% include 'components/read_only_field.html' with value=competidor.1.equipe.atletica.nome label='Equipe B' %}
+                    </div>
+                </div>
+                <div class="col-12 mb-3">
+                        {% include 'components/read_only_field.html' with value=partida.obs label='Observações' %}
+                </div>
+                {% if user.is_authenticated and user.is_staff %}
+                <button type="button" rel="tooltip" data-placement="left" title="Apagar item" class="btn btn-danger"
+                        data-toggle="modal" data-target="#modalPartida{{partida.pk}}">Excluir
+                </button>
+                <a href="{% url 'partida:partida_update' competidor.0.partida.pk %}"
+                   class="btn btn-warning float-right">
+                    Editar
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalPartida{{partida.pk}}" tabindex="-1" role="dialog"
+         aria-labelledby="TituloModalCentralizado" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="TituloModalCentralizado">Apagar Partida</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'partida:partida_delete' partida.pk %}" method="POST" novalidate>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col">
+                                Tem certeza que deseja apagar a partida?
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-danger btn-round">Apagar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

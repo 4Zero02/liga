@@ -1,0 +1,285 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}Equipes{% endblock title %}
+{% block content %}
+
+<div class="card card-nav-tabs">
+    <div class="card-header card-header-primary">
+        <div class="nav-tabs-navigation">
+            <div class="nav-tabs-wrapper">
+                <ul class="nav nav-tabs" data-tabs="tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#equipesALL" data-toggle="tab">Todas equipes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#equipesMASC" data-toggle="tab">Equipes MASC</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#equipesFEM" data-toggle="tab">Equipes FEM</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- TODAS EQUIPES -->
+    <div class="card-body ">
+        <div class="tab-content text-center">
+            <div class="tab-pane active" id="equipesALL">
+                <span class="pull-right">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h2 class="text-center"></h2>
+                        <span class="pull-right">
+                            <a href="{% url 'atletica:equipe_create' %}">
+                            <button type="button" class="btn btn-primary btn-round">
+                                <span class="fa fa-plus"></span> Adicionar Equipe
+                            </button>
+                            </a>
+                        </span>
+                    </div>
+                </span>
+                {% if object_list %}
+                <table id="tabelaALL" class="table table-striped table-responsive-sm">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Equipes</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for object in object_list %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{ object.competicao.modalidade.nome }} - {{ object.competicao.get_sex_display }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'atletica:equipe_update' object.pk %}">
+                                <button type="button" rel="tooltip" data-placement="left" title="Editar item"
+                                        class="btn btn-info">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                            </a>
+                            <!-- Button modal -->
+                            <button type="button" rel="tooltip" data-placement="left" title="Apagar item"
+                                    class="btn btn-danger"
+                                    data-toggle="modal" data-target="#modalEquipe{{object.pk}}">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <br>
+                <p class="alert alert-warning">Sem itens na lista.</p>
+                {% endif %}
+
+                <!-- Modal DELETE -->
+                {% for object in object_list %}
+                <div class="modal fade" id="modalEquipe{{object.pk}}" tabindex="-1" role="dialog"
+                     aria-labelledby="TituloModalCentralizado" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="TituloModalCentralizado">Apagar equipe</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{% url 'atletica:equipe_delete' object.pk %}" method="POST" novalidate>
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col">
+                                            Tem certeza que deseja apagar a equipe?
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">
+                                            Cancelar
+                                        </button>
+                                        <button type="submit" class="btn btn-danger btn-round">Apagar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- EQUIPE MASC -->
+            <div class="tab-pane" id="equipesMASC">
+                <span class="pull-right">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h2 class="text-center"></h2>
+                        <span class="pull-right">
+                            <a href="{% url 'atletica:equipe_create' %}">
+                            <button type="button" class="btn btn-primary btn-round">
+                                <span class="fa fa-plus"></span> Adicionar Equipe
+                            </button>
+                            </a>
+                        </span>
+                    </div>
+                </span>
+                {% if object_masc %}
+                <table id="tabelaMASC" class="table table-striped table-responsive-sm">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Equipes</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for object in object_masc %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{ object.competicao.modalidade.nome }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'atletica:equipe_update' object.pk %}">
+                                <button type="button" rel="tooltip" data-placement="left" title="Editar item"
+                                        class="btn btn-info">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                            </a>
+                            <!-- Button modal -->
+                            <button type="button" rel="tooltip" data-placement="left" title="Apagar item"
+                                    class="btn btn-danger"
+                                    data-toggle="modal" data-target="#modalEquipeM{{object.pk}}">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <br>
+                <p class="alert alert-warning">Sem itens na lista.</p>
+                {% endif %}
+
+                <!-- Modal DELETE -->
+                {% for object in object_list %}
+                <div class="modal fade" id="modalEquipeM{{object.pk}}" tabindex="-1" role="dialog"
+                     aria-labelledby="TituloModalCentralizado" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="TituloModalCentralizado">Apagar equipe</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{% url 'atletica:equipe_delete' object.pk %}" method="POST" novalidate>
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col">
+                                            Tem certeza que deseja apagar a equipe de {{object.modalidade}}?
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">
+                                            Cancelar
+                                        </button>
+                                        <button type="submit" class="btn btn-danger btn-round">Apagar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- EQUIPE FEM -->
+            <div class="tab-pane" id="equipesFEM">
+                <span class="pull-right">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h2 class="text-center"></h2>
+                        <span class="pull-right">
+                            <a href="{% url 'atletica:equipe_create' %}">
+                            <button type="button" class="btn btn-primary btn-round">
+                                <span class="fa fa-plus"></span> Adicionar Equipe
+                            </button>
+                            </a>
+                        </span>
+                    </div>
+                </span>
+                {% if object_fem %}
+                <table id="tabelaFEM" class="table table-striped table-responsive-sm">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Equipes</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for object in object_fem %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{ object.competicao.modalidade.nome }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'atletica:equipe_update' object.pk %}">
+                                <button type="button" rel="tooltip" title="Editar item"
+                                        class="btn btn-info">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </button>
+                            </a>
+                            <button type="button" rel="tooltip" data-placement="left" title="Apagar item"
+                                    class="btn btn-danger"
+                                    data-toggle="modal" data-target="#modalEquipeF{{object.pk}}">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
+                            <!-- Button modal -->
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <br>
+                <p class="alert alert-warning">Sem itens na lista.</p>
+                {% endif %}
+
+                <!-- Modal DELETE -->
+                {% for object in object_list %}
+                <div class="modal fade" id="modalEquipeF{{object.pk}}" tabindex="-1" role="dialog"
+                     aria-labelledby="TituloModalCentralizado" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="TituloModalCentralizado">Apagar equipe</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{% url 'atletica:equipe_delete' object.pk %}" method="POST" novalidate>
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col">
+                                            Tem certeza que deseja apagar a equipe de {{object.modalidade}}?
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">
+                                            Cancelar
+                                        </button>
+                                        <button type="submit" class="btn btn-danger btn-round">Apagar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
